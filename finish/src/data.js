@@ -15,13 +15,13 @@ export const defaultDevices = [
     state: "OFF"
   },
   {
-    name: "Ecobee",
-    type: "THERMOSTAT",
+    name: "Bose",
+    type: "SPEAKER",
     state: "OFF"
   },
   {
-    name: "Ecobee",
-    type: "THERMOSTAT",
+    name: "Front door camera",
+    type: "CAMERA",
     state: "OFF"
   }
 ];

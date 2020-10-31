@@ -29,11 +29,11 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 const Row = styled.div`
   display: flex;
   align-items: center;
   font-size: 16pt;
-  cursor: pointer;
 `;

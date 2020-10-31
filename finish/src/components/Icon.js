@@ -1,5 +1,5 @@
-import { AiOutlineBulb } from "react-icons/ai";
-import { CgScreen } from "react-icons/cg";
+import { AiOutlineBulb, AiOutlineVideoCamera } from "react-icons/ai";
+import { CgScreen, CgMusicSpeaker } from "react-icons/cg";
 import { FaTemperatureLow } from "react-icons/fa";
 
 function Icon({type}) {
@@ -14,6 +14,12 @@ function Icon({type}) {
         break;
       case "THERMOSTAT":
         icon = <FaTemperatureLow />;
+        break;
+      case "SPEAKER":
+        icon = <CgMusicSpeaker />;
+        break;
+      case "CAMERA":
+        icon = <AiOutlineVideoCamera />;
         break;
       default:
         break;

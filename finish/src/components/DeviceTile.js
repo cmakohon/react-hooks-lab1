@@ -41,5 +41,6 @@ const IconContainer = styled.div`
 `;
 
 const DeviceName = styled.span`
-  font-size: 22pt;
+  font-size: 20pt;
+  font-weight: 100;
 `;
