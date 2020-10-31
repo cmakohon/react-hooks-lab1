@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import DeviceTile from "./components/DeviceTile";
+import AddDevice from "./components/AddDevice";
+import Header from "./components/Header";
+import { defaultDevices } from "./data";
+import { confirmAlert } from "react-confirm-alert"; // Import
+import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
 function App() {
+  const homeName = "Collin's Home";
+  const devices = defaultDevices;
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header title={homeName} />
+      <div className="device-grid">
+        {devices.map((d, i) => (
+          <DeviceTile key={i} device={d}/>
+        ))}
+        <AddDevice />
+      </div>
     </div>
   );
 }
