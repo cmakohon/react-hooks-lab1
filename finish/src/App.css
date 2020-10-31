@@ -8,9 +8,15 @@
 
 .device-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-column-gap: 26px;
   grid-row-gap: 26px;
+}
+
+@media only screen and (min-width: 888px) {
+  .device-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
 
 @media only screen and (min-width: 1200px) {

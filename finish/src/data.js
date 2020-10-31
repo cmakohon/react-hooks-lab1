@@ -7,7 +7,7 @@ export const defaultDevices = [
   {
     name: "Living Room TV",
     type: "TV",
-    state: "OFF"
+    state: "ON"
   },
   {
     name: "Ecobee",
@@ -15,7 +15,7 @@ export const defaultDevices = [
     state: "OFF"
   },
   {
-    name: "Bose",
+    name: "Guest Room Bose",
     type: "SPEAKER",
     state: "OFF"
   },

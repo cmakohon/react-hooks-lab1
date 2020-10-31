@@ -4,12 +4,14 @@ import AddDevice from "./components/AddDevice";
 import Header from "./components/Header";
 import { AiFillGithub } from "react-icons/ai";
 import { defaultDevices } from "./data";
-import { confirmAlert } from "react-confirm-alert"; // Import
-import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
 function App() {
-  const homeName = "Collin's Home";
-  const devices = defaultDevices;
+  const homeName = "CapTech's Home";
+  let devices = defaultDevices;
+
+  const addDevice = () => {
+    console.log("add device");
+  }
 
   return (
     <div className="App">
@@ -18,7 +20,7 @@ function App() {
         {devices.map((d, i) => (
           <DeviceTile key={i} device={d}/>
         ))}
-        <AddDevice />
+        <AddDevice onAdd={addDevice}/>
       </div>
       <a href="https://github.com/cmakohon" className="footer">
         <AiFillGithub
