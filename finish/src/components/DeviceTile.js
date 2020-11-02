@@ -1,14 +1,35 @@
 import styled from "styled-components";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { CgRemove } from "react-icons/cg";
 import Icon from "./Icon";
 import SwitchWrapper from "./SwitchWrapper";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "../custom-confirm.css"; // Import css
+import { dataUrl } from "../globals";
 
-function DeviceTile(props) {
+function DeviceTile({device}) {
   const getState = (state) => state === "ON";
-  const toggleState = (e) => console.log(e);
+
+  const [active, setActive] = useState(getState(device.state));
+
+  const updateDeviceStatus = (state) => {
+    fetch(`${dataUrl}/updateDeviceState?id=vduzEKv3hsweVvBKWmjn`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        update: {
+          id: device.id,
+          state: state ? 'ON' : 'OFF'
+        }
+      })
+    }).then(data => data.json())
+      .then(data => {
+        setActive(state);
+      })
+  }
 
   const confirmDelete = () => {
     confirmAlert({
@@ -31,9 +52,9 @@ function DeviceTile(props) {
     <motion.div whileHover={{ scale: 1.02 }}>
       <Container>
         <Row>
-          <DeviceName>{props.device.name}</DeviceName>
-          <IconContainer active={getState(props.device.state)}>
-            <Icon type={props.device.type} />
+          <DeviceName>{device.name}</DeviceName>
+          <IconContainer active={active}>
+            <Icon type={device.type} />
           </IconContainer>
         </Row>
         <Row style={{ alignItems: "center" }}>
@@ -47,8 +68,8 @@ function DeviceTile(props) {
             />
           </motion.div>
           <SwitchWrapper
-            active={getState(props.device.state)}
-            onChange={toggleState}
+            active={active}
+            onChange={updateDeviceStatus}
           />
         </Row>
       </Container>

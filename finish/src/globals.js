@@ -1,1 +1,1 @@
-export const dataUrl = "https://us-central1-virtual-smart-home-8c6b8.cloudfunctions.net/";
+export const dataUrl = "https://us-central1-virtual-smart-home-8c6b8.cloudfunctions.net";

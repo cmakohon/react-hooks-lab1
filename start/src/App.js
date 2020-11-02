@@ -2,7 +2,7 @@ import "./App.css";
 import DeviceTile from "./components/DeviceTile";
 import AddDevice from "./components/AddDevice";
 import Header from "./components/Header";
-import { AiFillGithub } from "react-icons/ai";
+import Footer from "./components/Footer";
 import { defaultDevices } from "./data";
 
 function App() {
@@ -22,16 +22,7 @@ function App() {
         ))}
         <AddDevice onAdd={addDevice}/>
       </div>
-      <a href="https://github.com/cmakohon" className="footer">
-        <AiFillGithub
-          style={{
-            marginRight: ".5rem",
-            fontSize: "16pt",
-            marginBottom: "-4px",
-          }}
-        />
-        github.com/cmakohon
-      </a>
+      <Footer />
     </div>
   );
 }

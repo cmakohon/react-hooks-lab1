@@ -4,6 +4,8 @@ import Select from 'react-select'
 
 function DeviceForm(props) {
 
+  const { register, handleSubmit } = useForm();
+
   const customStyles = {
     control: (provided) => ({
       ...provided,
@@ -35,21 +37,22 @@ function DeviceForm(props) {
     { value: 'CAMERA', label: 'Camera' },
   ]
 
-  const onSubmit = () => {
-    props.onSubmit();
+  const onSubmit = (data) => {
+    console.log(data)
+    props.onSubmit(data);
     props.onClose();
   }
 
   return (
     <Container>
       <Header>Add Device</Header>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Label>Name</Label>
-        <Input type="text" required/>
+        <Input type="text" name="deviceName" ref={register} required/>
         <Label>Type</Label>
-        <Select options={options} styles={customStyles} required/>
+        <Select options={options} name="deviceType" ref={register} styles={customStyles} required/>
         <Row>
-          <Button style={{marginRight: '8px'}} onClick={onSubmit}>Submit</Button>
+          <Button style={{marginRight: '8px'}} type="submit">Submit</Button>
           <SecondaryButton style={{marginLeft: '8px'}} onClick={props.onClose}>Cancel</SecondaryButton>
         </Row>
       </form>
