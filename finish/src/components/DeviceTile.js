@@ -6,45 +6,11 @@ import Icon from "./Icon";
 import SwitchWrapper from "./SwitchWrapper";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "../custom-confirm.css"; // Import css
-import { dataUrl } from "../globals";
+import { updateDeviceStatus, deleteDevice } from "../homeAPI";
 
 function DeviceTile({device, onDelete}) {
   const getState = (state) => state === "ON";
-
   const [active, setActive] = useState(getState(device.state));
-
-  const updateDeviceStatus = (state) => {
-    fetch(`${dataUrl}/updateDeviceState?id=vduzEKv3hsweVvBKWmjn`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        update: {
-          id: device.id,
-          state: state ? 'ON' : 'OFF'
-        }
-      })
-    }).then(data => data.json())
-      .then(data => {
-        setActive(state);
-      });
-  }
-
-  const deleteDevice = (device) => {
-    fetch(`${dataUrl}/removeDevice?id=vduzEKv3hsweVvBKWmjn`, {
-      method: "DELETE",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        device: device
-      })
-    }).then(data => data.json())
-      .then(data => {
-        onDelete();
-      });
-  }
 
   const confirmDelete = () => {
     confirmAlert({
@@ -53,7 +19,7 @@ function DeviceTile({device, onDelete}) {
       buttons: [
         {
           label: 'Yes',
-          onClick: () => deleteDevice(device)
+          onClick: () => deleteDevice(device, onDelete)
         },
         {
           label: 'No',
@@ -84,7 +50,7 @@ function DeviceTile({device, onDelete}) {
           </motion.div>
           <SwitchWrapper
             active={active}
-            onChange={updateDeviceStatus}
+            onChange={(change) => updateDeviceStatus(device.id, change ? "ON" : "OFF", () => setActive(change))}
           />
         </Row>
       </Container>
