@@ -44,7 +44,7 @@ function App() {
       <Header title={homeName} />
       <div className="device-grid">
         {devices.map((d, i) => (
-          <DeviceTile key={i} device={d}/>
+          <DeviceTile key={i} device={d} onDelete={getHome}/>
         ))}
         <AddDevice onAdd={addDevice}/>
       </div>

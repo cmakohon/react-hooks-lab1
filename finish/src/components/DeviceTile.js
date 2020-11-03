@@ -8,7 +8,7 @@ import { confirmAlert } from "react-confirm-alert"; // Import
 import "../custom-confirm.css"; // Import css
 import { dataUrl } from "../globals";
 
-function DeviceTile({device}) {
+function DeviceTile({device, onDelete}) {
   const getState = (state) => state === "ON";
 
   const [active, setActive] = useState(getState(device.state));
@@ -28,7 +28,22 @@ function DeviceTile({device}) {
     }).then(data => data.json())
       .then(data => {
         setActive(state);
+      });
+  }
+
+  const deleteDevice = (device) => {
+    fetch(`${dataUrl}/removeDevice?id=vduzEKv3hsweVvBKWmjn`, {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        device: device
       })
+    }).then(data => data.json())
+      .then(data => {
+        onDelete();
+      });
   }
 
   const confirmDelete = () => {
@@ -38,7 +53,7 @@ function DeviceTile({device}) {
       buttons: [
         {
           label: 'Yes',
-          onClick: () => null
+          onClick: () => deleteDevice(device)
         },
         {
           label: 'No',
