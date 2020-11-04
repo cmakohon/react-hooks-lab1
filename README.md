@@ -22,7 +22,7 @@ In this lab, we will be building a virtual smart home dashboard using React Hook
 
 The basic components and styling of the application have already been implemented for you, as we want to jump right into using hooks. 
 
-We will start the lab by implementing local state across the application using the `useState` hook. Then, we will begin loading our home from an API call with `useEffect` when our app initializes. We will also convert the various functions across the application to hit our API, adding loading states along the way. Finally, we will abstract some of the reused logic from each of our API calls into our own custom `useFetch` hook. 
+We will start the lab by implementing local state across the application using the `useState` hook. Then, we will load our home from an API call with `useEffect` when our app initializes. We will also convert the various functions across the application to hit our API, adding loading states along the way. Finally, we will abstract some of the reused logic from each of our API calls into our own custom `useFetch` hook. 
 
 ## Part 1: Add local state using `useState`
 Once you have the application up and running, you'll notice that none of the core functionality is actually working. We will need to add local state to our components to keep track of any changes we make from the UI. 
@@ -306,3 +306,33 @@ function App() {
 }
 ```
 Perfect! Our app is now connected to all of our API endpoints.
+
+## Part 3: Abstract reused fetch logic into a custom hook
+You might have noticed a very similar pattern in several places in our code by this point in the lab. Whenever we're making an API call in our app, we're almost always doing 3 things:
+
+1. Tracking loading state
+2. Making the actual call with `fetch`
+3. Doing something with the returned data (really only for the getHome call in our case)
+
+This is the perfect opportunity to create our own custom hook: `useFetch`. Creating custom hooks is not complicated, and we just need to abide by React's rules for custom hooks:
+> "A custom Hook is a JavaScript function whose name starts with ”use” and that may call other Hooks."
+Let's create a new folder directly under our `src` directory called `hooks`. In that folder, create the following file: `useFetch.js`
+
+```
+import { useState } from "react";
+
+export function useFetch(asyncFunc, initialState) {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(initialState);
+
+  const fetchData = async (...args) => {
+    setLoading(true);
+    const response = await asyncFunc(...args);
+    const data = await response.json();
+    setData(data.result);
+    setLoading(false);
+  }
+
+  return [data, loading, fetchData];
+}
+```
