@@ -124,4 +124,65 @@ Congratulations, you now have a working Virtual Smart Home Dashboard! In the nex
 ## Part 2: Integrate with API using `useEffect`
 First off, you will need to visit [this URL](https://virtual-smart-home-8c6b8.web.app/) to create your personal instance of a smart home. Copy the ID that the page gives you after you submit your home name and paste it in the `yourHomeId` variable in the `homeAPI.js` file within your project.
 
-*If you are curious about the backend implementation, you can view the repository [here](https://github.com/cmakohon/virtual-smart-home).*
+*If you are curious about the backend implementation, you can view the repository [here](https://github.com/cmakohon/virtual-smart-home). Feel free to clone the project later and spin up your own firebase emulator locally.*
+
+The `homeAPI.js` file already contains the 4 functions that we will be using to make our API calls. We just need to call them in the correct components and update our state from there. Let's start with our initial home fetch in `App.js`. To do this, we can use the `useEffect` hook to execute code once our component mounts. By passing an empty array as the second parameter to `useEffect`, we ensure that the code inside the `useEffect` body will only be run once.
+
+```
+import { useState, useEffect } from "react";
+import { getHome } from './homeAPI';
+
+function App() {
+  const [home, setHome] = useState({
+    name: "",
+    devices: []
+  });
+
+  const fetchHome = async () => {
+    const response = await getHome();
+    const data = await response.json();
+    setHome(data.result);
+  }
+  
+  useEffect(() => {
+    fetchHome();
+  }, []);
+  ...
+}
+```
+You'll notice that we changed the initial state passed into our `useState` hook to be a home with no name and an empty array of devices. This will prevent any errors when trying to render the data from the return statement. 
+
+Once our `getHome` call finishes, we get the json data from the response and pass it back to our `setHome` function. This will automatically trigger a re-render because our local state will be changing. Refresh your page to see our new API call in action.
+
+The transition from our initial page load to when our API call returns is a little jarring. Let's track our loading state using another `useState` hook and use the `Loader` component that is already available in our `components` folder.
+
+```
+import Loader from "./components/Loader";
+
+function App() {
+  ...
+  const [loading, setLoading] = useState(false)
+
+  const fetchHome = async () => {
+    setLoading(true);
+    const response = await getHome();
+    const data = await response.json();
+    setHome(data.result);
+    setLoading(false);
+  }
+  ...
+  return (
+    <div className="App">
+      {loading && <Loader />}
+      <Header title={home.name} />
+      <div className="device-grid">
+        {home.devices.map((d, i) => (
+          <DeviceTile key={i} device={d} onDelete={deleteDevice}/>
+        ))}
+        <AddDevice onAdd={addDevice}/>
+      </div>
+      <Footer />
+    </div>
+  );
+}
+```
