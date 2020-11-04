@@ -6,7 +6,7 @@ import SwitchWrapper from "./SwitchWrapper";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "../custom-confirm.css"; // Import css
 
-function DeviceTile(props) {
+function DeviceTile({device, onDelete}) {
   const toggleState = (e) => console.log(e);
 
   const confirmDelete = () => {
@@ -16,7 +16,7 @@ function DeviceTile(props) {
       buttons: [
         {
           label: 'Yes',
-          onClick: () => null
+          onClick: onDelete
         },
         {
           label: 'No',
@@ -30,9 +30,9 @@ function DeviceTile(props) {
     <motion.div whileHover={{ scale: 1.02 }}>
       <Container>
         <Row>
-          <DeviceName>{props.device.name}</DeviceName>
-          <IconContainer active={props.device.state === "ON"}>
-            <Icon type={props.device.type} />
+          <DeviceName>{device.name}</DeviceName>
+          <IconContainer active={device.state === "ON"}>
+            <Icon type={device.type} />
           </IconContainer>
         </Row>
         <Row style={{ alignItems: "center" }}>
@@ -46,7 +46,7 @@ function DeviceTile(props) {
             />
           </motion.div>
           <SwitchWrapper
-            active={props.device.state === "ON"}
+            active={device.state === "ON"}
             onChange={toggleState}
           />
         </Row>

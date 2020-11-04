@@ -15,12 +15,16 @@ function App() {
     console.log("add device");
   }
 
+  const deleteDevice = () => {
+    console.log("delete device");
+  }
+
   return (
     <div className="App">
       <Header title={home.name} />
       <div className="device-grid">
         {home.devices.map((d, i) => (
-          <DeviceTile key={i} device={d}/>
+          <DeviceTile key={i} device={d} onDelete={deleteDevice}/>
         ))}
         <AddDevice onAdd={addDevice}/>
       </div>
