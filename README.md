@@ -33,7 +33,7 @@ The first change that we will make to our application will be in `DeviceTile.js`
 import { useState } from "react";
 
 function DeviceTile({device, onDelete}) {
-  const [active, setActive] = useState(device.state === "ON")
+  const [active, setActive] = useState(device.state === "ON");
   ...
  }
 ```
@@ -44,7 +44,7 @@ Next, we'll need to call our `setActive` function when our SwitchWrapper compone
 ```
 const toggleState = (change) => setActive(change);
 ```
-If everything is working properly, our toggle switch should now correctly update the DeviceTile's state!
+If everything is working properly, our toggle switch should now correctly update the `DeviceTile`'s state!
 
 Let's work on adding/deleting devices now. Currently, we are simply logging the add/delete events to the console from the `App.js` component. We need to be able to update the state in `App.js` since it contains the master list of our devices. Let's start by adding state to our `App.js` component:
 
@@ -161,7 +161,7 @@ import Loader from "./components/Loader";
 
 function App() {
   ...
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const fetchHome = async () => {
     setLoading(true);
@@ -183,6 +183,114 @@ function App() {
       </div>
       <Footer />
     </div>
+  );
+}
+```
+Now things are starting to look better! Next up is to implement the remaining API calls into our application (we'll track loading state for these calls as well). Let's start with toggling devices on/off in our `DeviceTile` component. 
+
+```
+import { updateDeviceStatus } from '../homeAPI';
+import Loader from "./Loader";
+
+function DeviceTile({device, onDelete}) {
+  ...
+  const [loading, setLoading] = useState(false);
+
+  const toggleState = async (change) => {
+    setLoading(true);
+    const response = await updateDeviceStatus(device.id, change ? "ON" : "OFF");
+    const data = await response.json();
+    setLoading(false);
+    setActive(change);
+  };
+  ...
+  return (
+    <motion.div whileHover={{ scale: 1.02 }}>
+      <Container>
+        {loading && <Loader />}
+        <*rest of the body* />
+      </Container>
+    </motion.div>
+  );
+}
+```
+The device's state should now be persisting properly. While we're here, let's go ahead and implement the delete functionality as well.
+
+```
+import { updateDeviceStatus, deleteDevice } from '../homeAPI';
+
+function DeviceTile({device, onDelete}) {
+  ...
+  const handleDelete = async () => {
+    setLoading(true);
+    const response = await deleteDevice(device);
+    const data = await response.json();
+    setLoading(false);
+    onDelete(device)
+  }
+
+  const confirmDelete = () => {
+    confirmAlert({
+      title: 'Delete Device',
+      message: 'Are you sure you want to remove this device from your home?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: handleDelete
+        },
+        {
+          label: 'No',
+          onClick: () => null
+        }
+      ]
+    });
+  };
+  ...
+}
+```
+Now that we're using real device objects from a database, we have IDs associated with each device. Let's quickly update our delete handler in `App.js` to account for this.
+
+```
+function App() {
+  ...
+  const deleteDevice = (device) => {
+    setHome({
+      ...home,
+      devices: [...home.devices.filter(d => d.id !== device.id)]
+    });
+  }
+  ...
+}
+```
+The only functionality left to implement now is the API call for adding a device. Let's go ahead and make that change in our `DeviceForm` component.
+
+```
+import { useState } from "react";
+import { addDevice } from '../homeAPI';
+import Loader from "./Loader";
+
+function DeviceForm(props) {
+  ...
+  const [loading, setLoading] = useState(false);
+  ...
+  const onSubmit = async (formData) => {
+    setLoading(true);
+    const response = await addDevice({
+      name: formData.deviceName,
+      type: formData.deviceType,
+      state: "OFF"
+    });
+    const data = await response.json();
+    setLoading(false);
+    props.onSubmit();
+    props.onClose();
+  }
+
+  return (
+    <Container>
+      {loading && <Loader />}
+      <*rest of the body* />
+    </Container>
   );
 }
 ```
