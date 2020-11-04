@@ -1,9 +1,12 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
+import { addDevice } from "../homeAPI";
+import { useFetch } from "../hooks/useFetch";
+import Loader from "./Loader";
 
 function DeviceForm(props) {
-
   const { register, handleSubmit } = useForm();
+  const [result, loading, submit] = useFetch(addDevice);
 
   const options = [
     { value: 'LIGHT', label: 'Light' },
@@ -13,17 +16,19 @@ function DeviceForm(props) {
     { value: 'CAMERA', label: 'Camera' },
   ]
 
-  const onSubmit = (data) => {
-    props.onSubmit({
-      name: data.deviceName,
-      type: data.deviceType,
+  const onSubmit = async (formData) => {
+    await submit({
+      name: formData.deviceName,
+      type: formData.deviceType,
       state: "OFF"
     });
+    props.onSubmit();
     props.onClose();
   }
 
   return (
     <Container>
+      {loading && <Loader />}
       <Header>Add Device</Header>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Label>Name</Label>
@@ -46,6 +51,7 @@ function DeviceForm(props) {
 export default DeviceForm;
 
 const Container = styled.div`
+  position: relative;
   width: 300px;
   height: 275px;
   display: flex;

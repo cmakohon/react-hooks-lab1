@@ -1,5 +1,5 @@
 const dataUrl = "https://us-central1-virtual-smart-home-8c6b8.cloudfunctions.net";
-const yourHomeId = "vduzEKv3hsweVvBKWmjn"
+const yourHomeId = "PASTE YOUR ID HERE"
 
 export const getHome = () => {
   return fetch(`${dataUrl}/getHome?id=${yourHomeId}`);

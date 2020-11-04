@@ -1,32 +1,32 @@
 import "./App.css";
+import { useEffect } from "react";
 import DeviceTile from "./components/DeviceTile";
 import AddDevice from "./components/AddDevice";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { useEffect, useState } from "react";
-import { getHome, addDevice } from "./homeAPI";
+import Loader from "./components/Loader";
+import { useFetch } from "./hooks/useFetch";
+import { getHome } from "./homeAPI";
 
 function App() {
-  const [homeName, setHomeName] = useState("");
-  const [devices, setDevices] = useState([]);
-
-  const getHomeCb = (data) => {
-    setDevices(data.result.devices)
-    setHomeName(data.result.name);
-  };
+  const [home, loading, fetch] = useFetch(getHome, {
+    name: "",
+    devices: []
+  });
 
   useEffect(() => {
-    getHome(getHomeCb);
-  }, [])
+    fetch();
+  }, []);
 
   return (
     <div className="App">
-      <Header title={homeName} />
+      {loading && <Loader />}
+      <Header title={home.name} />
       <div className="device-grid">
-        {devices.map((d, i) => (
-          <DeviceTile key={i} device={d} onDelete={() => getHome(getHomeCb)}/>
+        {home.devices.map((d, i) => (
+          <DeviceTile key={i} device={d} onDelete={fetch} />
         ))}
-        <AddDevice onAdd={(device) => addDevice(device, () => getHome(getHomeCb))}/>
+        <AddDevice onAdd={fetch} />
       </div>
       <Footer />
     </div>

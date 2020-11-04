@@ -3,14 +3,27 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { CgRemove } from "react-icons/cg";
 import Icon from "./Icon";
+import Loader from "./Loader";
 import SwitchWrapper from "./SwitchWrapper";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "../custom-confirm.css"; // Import css
 import { updateDeviceStatus, deleteDevice } from "../homeAPI";
+import { useFetch } from "../hooks/useFetch";
 
 function DeviceTile({device, onDelete}) {
-  const getState = (state) => state === "ON";
-  const [active, setActive] = useState(getState(device.state));
+  const [active, setActive] = useState(device.state === "ON");
+  const [deleteResult, deleteLoading, deleteDev] = useFetch(deleteDevice); 
+  const [updateResult, updateLoading, updateDevice] = useFetch(updateDeviceStatus); 
+
+  const handleDelete = async () => {
+    await deleteDev(device);
+    onDelete();
+  }
+
+  const handleUpdate = async (change) => {
+    await updateDevice(device.id, change ? "ON" : "OFF");
+    setActive(change)
+  }
 
   const confirmDelete = () => {
     confirmAlert({
@@ -19,7 +32,7 @@ function DeviceTile({device, onDelete}) {
       buttons: [
         {
           label: 'Yes',
-          onClick: () => deleteDevice(device, onDelete)
+          onClick: handleDelete
         },
         {
           label: 'No',
@@ -32,6 +45,7 @@ function DeviceTile({device, onDelete}) {
   return (
     <motion.div whileHover={{ scale: 1.02 }}>
       <Container>
+      {(deleteLoading || updateLoading) && <Loader />}
         <Row>
           <DeviceName>{device.name}</DeviceName>
           <IconContainer active={active}>
@@ -50,7 +64,7 @@ function DeviceTile({device, onDelete}) {
           </motion.div>
           <SwitchWrapper
             active={active}
-            onChange={(change) => updateDeviceStatus(device.id, change ? "ON" : "OFF", () => setActive(change))}
+            onChange={handleUpdate}
           />
         </Row>
       </Container>
@@ -61,6 +75,7 @@ function DeviceTile({device, onDelete}) {
 export default DeviceTile;
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
