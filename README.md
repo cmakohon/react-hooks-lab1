@@ -7,11 +7,13 @@ Repository for Lab 1 of CapTech's React learning series focused on React Hooks.
 
 ## Setup instructions
 1. Clone this repository to your local machine.
-2. On your machine, cd into the "start" directory of this project.
+2. On your machine, cd into the `start` directory of this project.
 3. Once inside the directory, run `npm install`.
 4. `rpm run start` will launch the application.
 
 ## Introduction
+![Virtual Smart Home Dashboard](./Dashboard.png)
+
 In this lab, we will be building a virtual smart home dashboard using React Hooks. Our dashboard will have the following functionality:
 - Display a list of our smart devices
 - Add a device
@@ -24,3 +26,5 @@ We will start the lab by implementing local state across the application using t
 
 ## Part 1: Add local state using `useState`
 Once you have the application up and running, you'll notice that none of the core functionality is actually working. We will need to add local state to our components to keep track of any changes we make from the UI. 
+
+The first change that we will make to our application will be in `DeviceTile.js`. Currently, clicking the toggle switch on the device doesn't change anything. We want the color of the icon in the top corner of our tile to reflect the state of our device. Let's use the `useState` hook to accomplish this.
