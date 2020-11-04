@@ -20,7 +20,7 @@ In this lab, we will be building a virtual smart home dashboard using React Hook
 
 The basic components and styling of the application have already been implemented for you, as we want to jump right into using hooks. 
 
-We will start the lab by implementing local state across the application using the `useState` hook. Then, we will begin loading our home from an API call with `useEffect` when our app initializes. We will also convert the various functions across the application to hit our API, adding loading states along the way. Finally, we will abstract some of the reused logic from each of our API calls into our own custom hook. 
+We will start the lab by implementing local state across the application using the `useState` hook. Then, we will begin loading our home from an API call with `useEffect` when our app initializes. We will also convert the various functions across the application to hit our API, adding loading states along the way. Finally, we will abstract some of the reused logic from each of our API calls into our own custom `useFetch` hook. 
 
 ## Part 1: Add local state using `useState`
-Once you have the application up and running, you'll notice that none of the functionality is actually working. 
+Once you have the application up and running, you'll notice that none of the core functionality is actually working. We will need to add local state to our components to keep track of any changes we make from the UI. 
