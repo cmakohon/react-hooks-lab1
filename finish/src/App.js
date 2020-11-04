@@ -9,13 +9,13 @@ import { useFetch } from "./hooks/useFetch";
 import { getHome } from "./homeAPI";
 
 function App() {
-  const [home, loading, fetch] = useFetch(getHome, {
+  const [home, loading, fetchHome] = useFetch(getHome, {
     name: "",
     devices: []
   });
 
   useEffect(() => {
-    fetch();
+    fetchHome();
   }, []);
 
   return (
@@ -24,9 +24,9 @@ function App() {
       <Header title={home.name} />
       <div className="device-grid">
         {home.devices.map((d, i) => (
-          <DeviceTile key={i} device={d} onDelete={fetch} />
+          <DeviceTile key={i} device={d} onDelete={fetchHome} />
         ))}
-        <AddDevice onAdd={fetch} />
+        <AddDevice onAdd={fetchHome} />
       </div>
       <Footer />
     </div>

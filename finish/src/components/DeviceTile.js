@@ -13,16 +13,16 @@ import { useFetch } from "../hooks/useFetch";
 function DeviceTile({device, onDelete}) {
   const [active, setActive] = useState(device.state === "ON");
   const [deleteResult, deleteLoading, deleteDev] = useFetch(deleteDevice); 
-  const [updateResult, updateLoading, updateDevice] = useFetch(updateDeviceStatus); 
+  const [updateResult, updateLoading, updateDev] = useFetch(updateDeviceStatus); 
+
+  const toggleState = async (change) => {
+    await updateDev(device.id, change ? "ON" : "OFF");
+    setActive(change)
+  };
 
   const handleDelete = async () => {
     await deleteDev(device);
     onDelete();
-  }
-
-  const handleUpdate = async (change) => {
-    await updateDevice(device.id, change ? "ON" : "OFF");
-    setActive(change)
   }
 
   const confirmDelete = () => {
@@ -64,7 +64,7 @@ function DeviceTile({device, onDelete}) {
           </motion.div>
           <SwitchWrapper
             active={active}
-            onChange={handleUpdate}
+            onChange={toggleState}
           />
         </Row>
       </Container>
