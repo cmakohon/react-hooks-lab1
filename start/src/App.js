@@ -6,8 +6,10 @@ import Footer from "./components/Footer";
 import { defaultDevices } from "./data";
 
 function App() {
-  const homeName = "CapTech's Home";
-  let devices = defaultDevices;
+  const home = {
+    name: "CapTech's Home",
+    devices: defaultDevices
+  }
 
   const addDevice = () => {
     console.log("add device");
@@ -15,9 +17,9 @@ function App() {
 
   return (
     <div className="App">
-      <Header title={homeName} />
+      <Header title={home.name} />
       <div className="device-grid">
-        {devices.map((d, i) => (
+        {home.devices.map((d, i) => (
           <DeviceTile key={i} device={d}/>
         ))}
         <AddDevice onAdd={addDevice}/>

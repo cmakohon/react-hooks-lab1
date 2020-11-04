@@ -7,7 +7,6 @@ import { confirmAlert } from "react-confirm-alert"; // Import
 import "../custom-confirm.css"; // Import css
 
 function DeviceTile(props) {
-  const getState = (state) => state === "ON";
   const toggleState = (e) => console.log(e);
 
   const confirmDelete = () => {
@@ -32,7 +31,7 @@ function DeviceTile(props) {
       <Container>
         <Row>
           <DeviceName>{props.device.name}</DeviceName>
-          <IconContainer active={getState(props.device.state)}>
+          <IconContainer active={props.device.state === "ON"}>
             <Icon type={props.device.type} />
           </IconContainer>
         </Row>
@@ -47,7 +46,7 @@ function DeviceTile(props) {
             />
           </motion.div>
           <SwitchWrapper
-            active={getState(props.device.state)}
+            active={props.device.state === "ON"}
             onChange={toggleState}
           />
         </Row>
@@ -59,6 +58,7 @@ function DeviceTile(props) {
 export default DeviceTile;
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

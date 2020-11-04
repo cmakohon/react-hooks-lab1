@@ -1,31 +1,8 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import Select from 'react-select'
 
 function DeviceForm(props) {
-
-  const customStyles = {
-    control: (provided) => ({
-      ...provided,
-      backgroundColor: '#C1CFDA',
-      borderColor: '#C1CFDA',
-      color: '#2B303A',
-      fontSize: '12pt'
-    }),
-    dropdownIndicator: (provided) => ({
-      ...provided,
-      color: '#2B303A'
-    }),
-    option: (provided) => ({
-      ...provided,
-      color: '#2B303A'
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: '#2B303A',
-      fontWeight: 'bold'
-    }),
-  }
+  const { register, handleSubmit } = useForm();
 
   const options = [
     { value: 'LIGHT', label: 'Light' },
@@ -35,7 +12,7 @@ function DeviceForm(props) {
     { value: 'CAMERA', label: 'Camera' },
   ]
 
-  const onSubmit = () => {
+  const onSubmit = (formData) => {
     props.onSubmit();
     props.onClose();
   }
@@ -43,11 +20,15 @@ function DeviceForm(props) {
   return (
     <Container>
       <Header>Add Device</Header>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Label>Name</Label>
-        <Input type="text" required/>
+        <Input type="text" name="deviceName" ref={register} required/>
         <Label>Type</Label>
-        <Select options={options} styles={customStyles} required/>
+        <Select name="deviceType" ref={register} required>
+          {options.map((o, i) => (
+            <option key={i} value={o.value}>{o.label}</option>
+          ))}
+        </Select>
         <Row>
           <Button style={{marginRight: '8px'}} onClick={onSubmit}>Submit</Button>
           <SecondaryButton style={{marginLeft: '8px'}} onClick={props.onClose}>Cancel</SecondaryButton>
@@ -60,6 +41,7 @@ function DeviceForm(props) {
 export default DeviceForm;
 
 const Container = styled.div`
+  position: relative;
   width: 300px;
   height: 275px;
   display: flex;
@@ -94,6 +76,21 @@ const Input = styled.input`
   &:focus {
     outline: none;
   }
+`;
+
+const Select = styled.select`
+  background-color: #C1CFDA;
+    border: none;
+    border-radius: 4px;
+    color: #2B303A;
+    padding: 11px;
+    width: 100%;
+    margin-bottom: 1rem;
+    font-size: 12pt;
+
+    &:focus {
+      outline: none;
+    }
 `;
 
 const Row = styled.div`
