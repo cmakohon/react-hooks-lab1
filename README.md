@@ -310,15 +310,15 @@ Perfect! Our app is now connected to all of our API endpoints.
 ## Part 3: Abstract reused fetch logic into a custom hook
 You might have noticed a very similar pattern in several places in our code by this point in the lab. Whenever we're making an API call in our app, we're almost always doing 3 things:
 
-1. Tracking loading state
-2. Making the actual call with `fetch`
-3. Doing something with the returned data (really only for the getHome call in our case)
+1. Using the returned data (really only for the getHome call in our case)
+2. Tracking loading state
+3. Making the actual call with `fetch`
 
 This is the perfect opportunity to create our own custom hook: `useFetch`. Creating custom hooks is not complicated, and we just need to abide by React's rules for custom hooks:
 
 > "A custom Hook is a JavaScript function whose name starts with ”use” and that may call other Hooks."
 
-Let's create a new folder directly under our `src` directory called `hooks`. In that folder, create the following file: `useFetch.js`
+Create a new folder directly under our `src` directory called `hooks`. In that folder, create the following file: `useFetch.js`
 
 ```
 import { useState } from "react";
@@ -338,3 +338,43 @@ export function useFetch(asyncFunc, initialState) {
   return [data, loading, fetchData];
 }
 ```
+Let's take a moment to break this down. We named our function `useFetch`, making sure to follow React's convention of starting custom hooks with "use". Our hook takes two parameters: an async function and an initial state. We are keeping track of the call's loading state within the hook using `useState` (remember, custom hooks are allowed to call other hooks). We are also using `useState` to keep track of the data that our call will return, passing our hook's `initialState` parameter in as `useState`'s initial state.
+
+Next, we define a function within our hook that will be responsible for actually making the API call. Within this function, we take care of all the logic around loading states and returning the response as json. Notice that this function accepts a [rest parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters). This makes it so that we can easily pass arguments alongside our `asyncFunc`. When the call is complete, we are updating our local `data` state with the result.
+
+Finally, we return an array of 3 items: `data`, `loading`, and the `fetchData` function. Notice how this perfectly aligns to the 3 common functionalities we described above. When a component uses this hook, it will be able to "hook into" the data state, the loading state, and the function that it needs to call to perform the API call.
+
+Let's use our custom hook for the first time in `App.js`.
+
+```
+import { useEffect } from "react";
+import { useFetch } from './hooks/useFetch';
+
+function App() {
+  const [home, loading, fetchHome] = useFetch(getHome, {
+    name: "",
+    devices: []
+  });
+
+  useEffect(() => {
+    fetchHome();
+  }, []);
+
+  return (
+    <div className="App">
+      {loading && <Loader />}
+      <Header title={home.name} />
+      <div className="device-grid">
+        {home.devices.map((d, i) => (
+          <DeviceTile key={i} device={d} onDelete={fetchHome}/>
+        ))}
+        <AddDevice onAdd={fetchHome}/>
+      </div>
+      <Footer />
+    </div>
+  );
+}
+```
+Look at all the code we were able to remove! `App.js` no longer needs to concern itself with `useState` since `useFetch` keeps track of that for us. We passed it the `getHome` function from our `homeAPI.js` file, along with the same initial state that we had before. Now our `App` component has it's own `fetchHome` method that it can call any time it needs to load (or reload) the home. We can also directly reference the `loading` variable returned from the `useFetch` hook to keep track of our loading state within the component. 
+
+We can also pass `fetchHome` as the callback method for our delete and add functionalities so that we reload the current home after either of those actions.
