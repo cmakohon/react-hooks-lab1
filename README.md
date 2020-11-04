@@ -60,3 +60,61 @@ function App() {
 }
 ```
 Now that we are tracking our home state, we can modify our `addDevice` and `deleteDevice` functions to update our home's state with `setHome`.
+
+```
+function App() {
+  ...
+  const addDevice = (device) => {
+    setHome({
+      ...home,
+      devices: [...home.devices, device]
+    });
+  }
+  const deleteDevice = (device) => {
+    setHome({
+      ...home,
+      devices: [...home.devices.filter(d => d.name !== device.name)]
+    });
+  }
+  ...
+}
+```
+*Note: We are deleting only based on device names matching - normally we would want a unique key to match on, but for the purposes of this lab matching on the name will suffice.*
+
+Next we need to update our `DeviceForm` and `DeviceTile` components to pass back the devices that they are adding and deleting respectively.
+
+```
+function DeviceForm(props) {
+  ...
+  const onSubmit = (formData) => {
+    props.onSubmit({
+      name: formData.deviceName,
+      type: formData.deviceType,
+      state: "OFF"
+    });
+    props.onClose();
+  }
+  ...
+}
+...
+function DeviceTile({device, onDelete}) {
+  ...
+  const confirmDelete = () => {
+    confirmAlert({
+      title: 'Delete Device',
+      message: 'Are you sure you want to remove this device from your home?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => onDelete(device)
+        },
+        {
+          label: 'No',
+          onClick: () => null
+        }
+      ]
+    });
+  };
+  ...
+}
+```
