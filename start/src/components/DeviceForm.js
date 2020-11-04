@@ -30,7 +30,7 @@ function DeviceForm(props) {
           ))}
         </Select>
         <Row>
-          <Button style={{marginRight: '8px'}} onClick={onSubmit}>Submit</Button>
+          <Button style={{marginRight: '8px'}} type="submit">Submit</Button>
           <SecondaryButton style={{marginLeft: '8px'}} onClick={props.onClose}>Cancel</SecondaryButton>
         </Row>
       </form>
