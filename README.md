@@ -410,6 +410,30 @@ function DeviceTile({device, onDelete}) {
   );
 }
 ```
-Notice that in this case that since we are calling the `useFetch` hook for two different actions, we have to store the loading states for each action separately.
+Notice that in this case that since we are calling the `useFetch` hook for two different actions, we have to store the loading states for each action separately. We will also still manage `DeviceTile`'s local `active` state with `useState` for simplicity.
 
 Finally, let's add our `useFetch` hook in our `DeviceForm` component.
+
+```
+import { addDevice } from '../homeAPI';
+import { useFetch } from '../hooks/useFetch';
+
+function DeviceForm(props) {
+  ...
+  const [result, loading, submit] = useFetch(addDevice);
+  ...
+  const onSubmit = async (formData) => {
+    await submit({
+      name: formData.deviceName,
+      type: formData.deviceType,
+      state: "OFF"
+    });
+    props.onSubmit();
+    props.onClose();
+  }
+  ...
+}
+```
+
+
+And that's it! You now have your very own React application that uses `useState`, `useEffect`, and your own custom hook `useFetch`. I hope you've enjoyed this lab and that you now feel empowered to use React Hooks in your own applications.
