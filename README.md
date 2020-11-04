@@ -37,11 +37,26 @@ function DeviceTile({device, onDelete}) {
   ...
  }
 ```
-Now, we can reference our DeviceTile's on/off state (initialized based on the component's props) with the `active` variable, and we can update our state using the `setActive` method. Update the `render` method to reference our new `active` state anywhere we were previously using `device.state === "ON"`.
+Now, we can reference our DeviceTile's on/off state (initialized based on the component's props) with the `active` variable, and we can update our state using the `setActive` function that was returned by the `useState` hook. Update our return statement to reference our new `active` state anywhere we were previously using `device.state === "ON"`.
 
-Next, we'll need to call our `setActive` method when our SwitchWrapper component changes. We can do this by updating the `toggleState` method that has already been defined at the top of the component.
+Next, we'll need to call our `setActive` function when our SwitchWrapper component changes. We can do this by updating the `toggleState` method that has already been defined at the top of the component.
 
 ```
 const toggleState = (change) => setActive(change);
 ```
-If everything is working properly, our toggle switch should now corrently update the DeviceTile's state!
+If everything is working properly, our toggle switch should now correctly update the DeviceTile's state!
+
+Let's work on adding/deleting devices now. Currently, we are simply logging the add/delete events to the console from the `App.js` component. We need to be able to update the state in `App.js` since it contains the master list of our devices. Let's start by adding state to our `App.js` component:
+
+```
+import { useState } from "react";
+
+function App() {
+  const [home, setHome] = useState({
+    name: "CapTech's Home",
+    devices: defaultDevices
+  });
+  ...
+}
+```
+Now that we are tracking our home state, we can modify our `addDevice` and `deleteDevice` functions to update our home's state with `setHome`.
