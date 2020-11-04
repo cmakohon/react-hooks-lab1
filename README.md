@@ -294,3 +294,15 @@ function DeviceForm(props) {
   );
 }
 ```
+Our form should be hitting our API now. Since our API does not return the newly created device in the response (that's my bad), we should have our `App` component refetch our home after we create a new device so that it knows about the device's new ID in case you wanted to update or delete it afterwards. Let's make the change to `App.js`.
+
+```
+function App() {
+  ...
+  const addDevice = () => {
+    fetchHome();
+  }
+  ...
+}
+```
+Perfect! Our app is now connected to all of our API endpoints.
