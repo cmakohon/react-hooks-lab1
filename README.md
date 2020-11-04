@@ -81,7 +81,7 @@ function App() {
 ```
 *Note: We are deleting only based on device names matching - normally we would want a unique key to match on, but for the purposes of this lab matching on the name will suffice.*
 
-Next we need to update our `DeviceForm` and `DeviceTile` components to pass back the devices that they are adding and deleting respectively.
+Next, we need to update our `DeviceForm` and `DeviceTile` components to pass back the devices that they are adding and deleting respectively.
 
 ```
 function DeviceForm(props) {
@@ -96,7 +96,7 @@ function DeviceForm(props) {
   }
   ...
 }
-...
+
 function DeviceTile({device, onDelete}) {
   ...
   const confirmDelete = () => {
@@ -118,3 +118,10 @@ function DeviceTile({device, onDelete}) {
   ...
 }
 ```
+
+Congratulations, you now have a working Virtual Smart Home Dashboard! In the next section we will work on integrating this with an actual API so that our changes can be persisted.
+
+## Part 2: Integrate with API using `useEffect`
+First off, you will need to visit [this URL](https://virtual-smart-home-8c6b8.web.app/) to create your personal instance of a smart home. Copy the ID that the page gives you after you submit your home name and paste it in the `yourHomeId` variable in the `homeAPI.js` file within your project.
+
+*If you are curious about the backend implementation, you can view the repository [here](https://github.com/cmakohon/virtual-smart-home).*
