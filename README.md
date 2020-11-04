@@ -28,3 +28,20 @@ We will start the lab by implementing local state across the application using t
 Once you have the application up and running, you'll notice that none of the core functionality is actually working. We will need to add local state to our components to keep track of any changes we make from the UI. 
 
 The first change that we will make to our application will be in `DeviceTile.js`. Currently, clicking the toggle switch on the device doesn't change anything. We want the color of the icon in the top corner of our tile to reflect the state of our device. Let's use the `useState` hook to accomplish this.
+
+```
+import { useState } from "react";
+
+function DeviceTile({device, onDelete}) {
+  const [active, setActive] = useState(device.state === "ON")
+  ...
+ }
+```
+Now, we can reference our DeviceTile's on/off state (initialized based on the component's props) with the `active` variable, and we can update our state using the `setActive` method. Update the `render` method to reference our new `active` state anywhere we were previously using `device.state === "ON"`.
+
+Next, we'll need to call our `setActive` method when our SwitchWrapper component changes. We can do this by updating the `toggleState` method that has already been defined at the top of the component.
+
+```
+const toggleState = (change) => setActive(change);
+```
+If everything is working properly, our toggle switch should now corrently update the DeviceTile's state!
