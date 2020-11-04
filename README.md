@@ -307,7 +307,7 @@ function App() {
 ```
 Perfect! Our app is now connected to all of our API endpoints.
 
-## Part 3: Abstract reused fetch logic into a custom hook
+## Part 3: Abstract reused fetch logic into custom hook
 You might have noticed a very similar pattern in several places in our code by this point in the lab. Whenever we're making an API call in our app, we're almost always doing 3 things:
 
 1. Using the returned data (really only for the getHome call in our case)
@@ -375,6 +375,41 @@ function App() {
   );
 }
 ```
-Look at all the code we were able to remove! `App.js` no longer needs to concern itself with `useState` since `useFetch` keeps track of that for us. We passed it the `getHome` function from our `homeAPI.js` file, along with the same initial state that we had before. Now our `App` component has it's own `fetchHome` method that it can call any time it needs to load (or reload) the home. We can also directly reference the `loading` variable returned from the `useFetch` hook to keep track of our loading state within the component. 
+Look at all the code we were able to remove! `App.js` no longer needs to concern itself with `useState` since `useFetch` keeps track of that for us. We passed it the `getHome` function from our `homeAPI.js` file, along with the same initial state that we had before. Now our `App` component has it's own `fetchHome` method that it can call any time it needs to load (or reload) the home. We can directly reference the `loading` variable returned from the `useFetch` hook to keep track of our loading state within the component. We can also pass `fetchHome` as the callback method for our delete and add functionalities so that we reload the current home after either of those actions.
 
-We can also pass `fetchHome` as the callback method for our delete and add functionalities so that we reload the current home after either of those actions.
+Let's go ahead and implement our custom hook in the other components in our app that make API calls. We'll start with `DeviceTile`.
+
+```
+import { updateDeviceStatus, deleteDevice } from '../homeAPI';
+import { useFetch } from '../hooks/useFetch';
+
+function DeviceTile({device, onDelete}) {
+  const [active, setActive] = useState(device.state === "ON");
+  const [deleteResult, deleteLoading, deleteDev] = useFetch(deleteDevice); 
+  const [updateResult, updateLoading, updateDev] = useFetch(updateDeviceStatus); 
+
+  const toggleState = async (change) => {
+    await updateDev(device.id, change ? "ON" : "OFF");
+    setActive(change)
+  };
+
+  const handleDelete = async () => {
+    await deleteDev(device);
+    onDelete();
+  }
+  
+  ...
+  
+  return (
+    <motion.div whileHover={{ scale: 1.02 }}>
+      <Container>
+        {(deleteLoading || updateLoading) && <Loader />}
+        <*rest of the body* />
+      </Container>
+    </motion.div>
+  );
+}
+```
+Notice that in this case that since we are calling the `useFetch` hook for two different actions, we have to store the loading states for each action separately.
+
+Finally, let's add our `useFetch` hook in our `DeviceForm` component.
