@@ -315,7 +315,9 @@ You might have noticed a very similar pattern in several places in our code by t
 3. Doing something with the returned data (really only for the getHome call in our case)
 
 This is the perfect opportunity to create our own custom hook: `useFetch`. Creating custom hooks is not complicated, and we just need to abide by React's rules for custom hooks:
+
 > "A custom Hook is a JavaScript function whose name starts with ”use” and that may call other Hooks."
+
 Let's create a new folder directly under our `src` directory called `hooks`. In that folder, create the following file: `useFetch.js`
 
 ```
